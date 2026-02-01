@@ -26,7 +26,7 @@ export function UserDetailsActions({
         variant={isBlocked ? "outline" : "destructive"}
         size="sm"
         onClick={handleClick}
-        className="rounded-lg"
+        className="min-h-[44px] rounded-lg sm:min-h-0"
       >
         <Ban className="mr-2 h-4 w-4 shrink-0" />
         {isBlocked ? "Unblock user" : "Block user"}

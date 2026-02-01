@@ -32,14 +32,14 @@ export function NotesTable({
         className
       )}
     >
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto -mx-4 sm:mx-0">
         <table className="w-full min-w-[560px] border-collapse">
           <thead>
             <tr className="border-b border-border bg-muted/30">
               {TABLE_HEADERS.map(({ key, label }) => (
                 <th
                   key={key}
-                  className="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground"
+                  className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground sm:px-5"
                 >
                   {label}
                 </th>
@@ -111,7 +111,7 @@ function NotesTableRow({
             variant="ghost"
             size="sm"
             onClick={() => onDelete?.(note)}
-            className="h-8 gap-1.5 px-2.5 text-destructive hover:bg-destructive/10 hover:text-destructive"
+            className="h-9 min-h-[44px] gap-1.5 px-2.5 text-destructive hover:bg-destructive/10 hover:text-destructive sm:h-8 sm:min-h-0"
             aria-label="Delete note"
           >
             <Trash2 className="h-4 w-4 shrink-0" />

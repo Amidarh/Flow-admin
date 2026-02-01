@@ -33,14 +33,14 @@ export function CoursesTable({
         className
       )}
     >
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto -mx-4 sm:mx-0">
         <table className="w-full min-w-[680px] border-collapse">
           <thead>
             <tr className="border-b border-border bg-muted/30">
               {TABLE_HEADERS.map(({ key, label }) => (
                 <th
                   key={key}
-                  className="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground"
+                  className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground sm:px-5"
                 >
                   {label}
                 </th>
@@ -81,16 +81,10 @@ function CoursesTableRow({
 
   return (
     <tr className="border-b border-border/50 transition-colors hover:bg-muted/20 last:border-b-0">
-      <td className="px-5 py-4 text-sm font-medium text-foreground">
-        {course.title}
-      </td>
-      <td className="px-5 py-4 text-sm text-muted-foreground">
-        {course.userEmail}
-      </td>
-      <td className="px-5 py-4 text-sm text-muted-foreground tabular-nums">
-        {course.createdAt}
-      </td>
-      <td className="px-5 py-4">
+      <td className="px-4 py-3 text-sm font-medium text-foreground sm:px-5 sm:py-4">{course.title}</td>
+      <td className="px-4 py-3 text-sm text-muted-foreground sm:px-5 sm:py-4">{course.userEmail}</td>
+      <td className="px-4 py-3 text-sm text-muted-foreground tabular-nums sm:px-5 sm:py-4">{course.createdAt}</td>
+      <td className="px-4 py-3 sm:px-5 sm:py-4">
         <span
           className={cn(
             "inline-flex rounded-full px-2.5 py-1 text-xs font-medium capitalize",
@@ -129,7 +123,7 @@ function CoursesTableRow({
             variant="ghost"
             size="sm"
             onClick={() => onDelete?.(course)}
-            className="h-8 gap-1.5 px-2.5 text-destructive hover:bg-destructive/10 hover:text-destructive"
+            className="h-9 min-h-[44px] gap-1.5 px-2.5 text-destructive hover:bg-destructive/10 hover:text-destructive sm:h-8 sm:min-h-0"
             aria-label="Delete course"
           >
             <Trash2 className="h-4 w-4 shrink-0" />

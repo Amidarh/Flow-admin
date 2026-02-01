@@ -37,14 +37,14 @@ export function UsersTable({ users, className }: UsersTableProps) {
         className
       )}
     >
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto -mx-4 sm:mx-0">
         <table className="w-full min-w-[720px] border-collapse">
           <thead>
             <tr className="border-b border-border bg-muted/30">
               {TABLE_HEADERS.map(({ key, label }) => (
                 <th
                   key={key}
-                  className="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground"
+                  className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground sm:px-5"
                 >
                   {label}
                 </th>
@@ -71,19 +71,11 @@ function UsersTableRow({ user }: UsersTableRowProps) {
 
   return (
     <tr className="border-b border-border/50 transition-colors hover:bg-muted/20 last:border-b-0">
-      <td className="px-5 py-4 text-sm font-medium text-foreground">
-        {user.fullName}
-      </td>
-      <td className="px-5 py-4 text-sm text-muted-foreground">
-        {user.email}
-      </td>
-      <td className="px-5 py-4 text-sm text-muted-foreground tabular-nums">
-        {user.dateJoined}
-      </td>
-      <td className="px-5 py-4 text-sm text-muted-foreground tabular-nums">
-        {user.lastLogin ?? "–"}
-      </td>
-      <td className="px-5 py-4">
+      <td className="px-4 py-3 text-sm font-medium text-foreground sm:px-5 sm:py-4">{user.fullName}</td>
+      <td className="px-4 py-3 text-sm text-muted-foreground sm:px-5 sm:py-4">{user.email}</td>
+      <td className="px-4 py-3 text-sm text-muted-foreground tabular-nums sm:px-5 sm:py-4">{user.dateJoined}</td>
+      <td className="px-4 py-3 text-sm text-muted-foreground tabular-nums sm:px-5 sm:py-4">{user.lastLogin ?? "–"}</td>
+      <td className="px-4 py-3 sm:px-5 sm:py-4">
         <span
           className={cn(
             "inline-flex rounded-full px-2.5 py-1 text-xs font-medium",
@@ -93,13 +85,11 @@ function UsersTableRow({ user }: UsersTableRowProps) {
           {user.status}
         </span>
       </td>
-      <td className="px-5 py-4 text-sm text-muted-foreground">
-        {user.country ?? "–"}
-      </td>
-      <td className="px-5 py-4">
+      <td className="px-4 py-3 text-sm text-muted-foreground sm:px-5 sm:py-4">{user.country ?? "–"}</td>
+      <td className="px-4 py-3 sm:px-5 sm:py-4">
         <Link
           href={`/users/${user.id}`}
-          className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
+          className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline min-h-[44px] items-center"
         >
           View details
           <ArrowRight className="h-4 w-4 shrink-0" />

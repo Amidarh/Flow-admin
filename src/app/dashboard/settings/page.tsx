@@ -48,10 +48,10 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       <div>
-        <h1 className="text-xl font-bold tracking-tight text-foreground">Settings</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
+        <h1 className="text-lg font-bold tracking-tight text-foreground sm:text-xl">Settings</h1>
+        <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
           Manage your account, security, and sign out.
         </p>
       </div>

@@ -51,7 +51,7 @@ export function UsersPagination({
           aria-label="Previous page"
           disabled={page <= 1}
           onClick={() => onPageChange(page - 1)}
-          className="rounded-lg border border-border bg-card px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted disabled:pointer-events-none disabled:opacity-50"
+          className="min-h-[44px] rounded-lg border border-border bg-card px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted disabled:pointer-events-none disabled:opacity-50"
         >
           Previous
         </button>
@@ -66,7 +66,7 @@ export function UsersPagination({
                 aria-current={isActive ? "page" : undefined}
                 onClick={() => onPageChange(num)}
                 className={cn(
-                  "min-w-[2.25rem] rounded-lg border px-3 py-2 text-sm font-medium transition-colors",
+                  "min-h-[44px] min-w-[2.25rem] rounded-lg border px-3 py-2 text-sm font-medium transition-colors sm:min-h-0",
                   isActive
                     ? "border-primary bg-primary text-white dark:text-zinc-50"
                     : "border-border bg-card text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -82,7 +82,7 @@ export function UsersPagination({
           aria-label="Next page"
           disabled={page >= totalPages}
           onClick={() => onPageChange(page + 1)}
-          className="rounded-lg border border-border bg-card px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted disabled:pointer-events-none disabled:opacity-50"
+          className="min-h-[44px] rounded-lg border border-border bg-card px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted disabled:pointer-events-none disabled:opacity-50"
         >
           Next
         </button>

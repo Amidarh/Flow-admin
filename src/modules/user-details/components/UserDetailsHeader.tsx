@@ -30,7 +30,7 @@ export function UserDetailsHeader({
             <ArrowLeft className="h-4 w-4 shrink-0" />
             {backLabel}
           </Link>
-          <h1 className="mt-2 text-xl font-bold tracking-tight text-foreground">
+          <h1 className="mt-2 text-lg font-bold tracking-tight text-foreground sm:text-xl">
             {title}
           </h1>
         </div>

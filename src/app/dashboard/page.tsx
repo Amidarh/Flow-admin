@@ -76,19 +76,19 @@ const latestUsers = [
 
 export default function DashboardPage() {
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       {/* Summary cards */}
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {summaryCards.map(({ title, value, link, href }) => (
           <Card
             key={title}
             className="rounded-xl border-border bg-card shadow-sm"
           >
-            <CardContent className="px-6">
+            <CardContent className="px-4 py-4 sm:px-6">
               <p className="text-sm font-medium text-muted-foreground">
                 {title}
               </p>
-              <p className="mt-2 text-2xl font-bold tracking-tight text-foreground">
+              <p className="mt-2 text-xl font-bold tracking-tight text-foreground sm:text-2xl">
                 {value}
               </p>
               <Link
@@ -104,19 +104,18 @@ export default function DashboardPage() {
       </div>
 
       {/* Charts */}
-      <div className="">
-
+      <div>
         <Card className="rounded-xl border-border bg-card shadow-sm">
-          <CardHeader className="flex flex-row items-start justify-between space-y-0 px-6 pb-4">
+          <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between space-y-0 px-4 pb-4 sm:px-6">
             <CardTitle className="text-base font-semibold">
               User signups by month
             </CardTitle>
-            <span className="rounded-full bg-primary/20 px-3 py-1 text-xs font-medium text-primary dark:text-primary">
+            <span className="rounded-full bg-primary/20 px-3 py-1 text-xs font-medium text-primary dark:text-primary shrink-0">
               Last 12 months
             </span>
           </CardHeader>
-          <CardContent className="px-6 pb-6">
-            <div className="h-[260px] w-full">
+          <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
+            <div className="h-[220px] w-full min-h-[200px] sm:h-[260px]">
               <ChartContainer
                 config={signupsChartConfig}
                 className="h-full w-full aspect-auto"
@@ -202,18 +201,10 @@ export default function DashboardPage() {
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
                     User
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                    Email
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                    Date joined
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                    Status
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                    Action
-                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground sm:px-6">Email</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground sm:px-6">Date joined</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground sm:px-6">Status</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground sm:px-6">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -222,16 +213,10 @@ export default function DashboardPage() {
                     key={row.id}
                     className="border-b border-border/50 transition-colors hover:bg-muted/20"
                   >
-                    <td className="px-6 py-4 text-sm font-medium text-foreground">
-                      {row.fullName}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-muted-foreground">
-                      {row.email}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-muted-foreground tabular-nums">
-                      {row.dateJoined}
-                    </td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-3 text-sm font-medium text-foreground sm:px-6 sm:py-4">{row.fullName}</td>
+                    <td className="px-4 py-3 text-sm text-muted-foreground sm:px-6 sm:py-4">{row.email}</td>
+                    <td className="px-4 py-3 text-sm text-muted-foreground tabular-nums sm:px-6 sm:py-4">{row.dateJoined}</td>
+                    <td className="px-4 py-3 sm:px-6 sm:py-4">
                       <span
                         className={
                           row.status === "Active"
@@ -242,7 +227,7 @@ export default function DashboardPage() {
                         {row.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-3 sm:px-6 sm:py-4">
                       <Button
                         variant="link"
                         size="sm"
