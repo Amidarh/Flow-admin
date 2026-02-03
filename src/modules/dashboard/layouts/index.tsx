@@ -273,7 +273,7 @@ export function DashboardContent() {
                         className="h-auto p-0 text-primary hover:underline"
                         asChild
                       >
-                        <Link href={`/users/${row.id}`}>
+                        <Link href={`/users/${row._id}`}>
                           View
                           <ArrowRight className="ml-1 inline h-4 w-4" />
                         </Link>
