@@ -2,11 +2,13 @@
 
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import type { UserListItem, UserStatus } from "../types";
+import type { UserStatus } from "../types";
 import { cn } from "@/lib/utils";
+import { IUser } from "@/types";
+import moment from "moment";
 
 interface UsersTableProps {
-  users: UserListItem[];
+  users: IUser[];
   className?: string;
 }
 
@@ -63,18 +65,18 @@ export function UsersTable({ users, className }: UsersTableProps) {
 }
 
 interface UsersTableRowProps {
-  user: UserListItem;
+  user: IUser;
 }
 
 function UsersTableRow({ user }: UsersTableRowProps) {
-  const statusStyle = statusStyles[user.status];
+  const statusStyle = statusStyles[user.isBlocked ? "Inactive" : "Active"];
 
   return (
     <tr className="border-b border-border/50 transition-colors hover:bg-muted/20 last:border-b-0">
-      <td className="px-4 py-3 text-sm font-medium text-foreground sm:px-5 sm:py-4">{user.fullName}</td>
+      <td className="px-4 py-3 text-sm font-medium text-foreground sm:px-5 sm:py-4">{user.firstName} {user.lastName}</td>
       <td className="px-4 py-3 text-sm text-muted-foreground sm:px-5 sm:py-4">{user.email}</td>
-      <td className="px-4 py-3 text-sm text-muted-foreground tabular-nums sm:px-5 sm:py-4">{user.dateJoined}</td>
-      <td className="px-4 py-3 text-sm text-muted-foreground tabular-nums sm:px-5 sm:py-4">{user.lastLogin ?? "–"}</td>
+      <td className="px-4 py-3 text-sm text-muted-foreground tabular-nums sm:px-5 sm:py-4">{user.createdAt ? moment(user.createdAt).format("DD MMM YYYY") : "–"}</td>
+      <td className="px-4 py-3 text-sm text-muted-foreground tabular-nums sm:px-5 sm:py-4">{user.lastLogin ? moment(user.lastLogin).format("DD MMM YYYY, HH:mm") : "–"}</td>
       <td className="px-4 py-3 sm:px-5 sm:py-4">
         <span
           className={cn(
@@ -82,13 +84,13 @@ function UsersTableRow({ user }: UsersTableRowProps) {
             statusStyle
           )}
         >
-          {user.status}
+          {user.isBlocked ? "Inactive" : "Active"}
         </span>
       </td>
       <td className="px-4 py-3 text-sm text-muted-foreground sm:px-5 sm:py-4">{user.country ?? "–"}</td>
       <td className="px-4 py-3 sm:px-5 sm:py-4">
         <Link
-          href={`/users/${user.id}`}
+          href={`/users/${user._id}`}
           className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline min-h-[44px] items-center"
         >
           View details

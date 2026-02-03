@@ -1,21 +1,18 @@
 "use client";
 
-import type { UserDetailsStats } from "../types";
 import { cn } from "@/lib/utils";
 
 interface UserDetailsStatsCardsProps {
-  stats: UserDetailsStats;
+  stats: {
+    coursesCount: number;
+    standardCoursesCount: number;
+    flexibleCoursesCount: number;
+  };
   className?: string;
 }
 
-const STAT_CARDS = [
-  { key: "notesCount" as const, label: "Notes" },
-  { key: "standardCoursesCount" as const, label: "Standard courses" },
-  { key: "flexibleCoursesCount" as const, label: "Flexible courses" },
-  { key: "totalCourses" as const, label: "Total courses" },
-];
-
 export function UserDetailsStatsCards({ stats, className }: UserDetailsStatsCardsProps) {
+
   return (
     <div
       className={cn(
@@ -23,17 +20,38 @@ export function UserDetailsStatsCards({ stats, className }: UserDetailsStatsCard
         className
       )}
     >
-      {STAT_CARDS.map(({ key, label }) => (
-        <div
-          key={key}
+      <div
           className="rounded-xl border border-border bg-card p-5 shadow-sm"
         >
-          <p className="text-sm font-medium text-muted-foreground">{label}</p>
+          <p className="text-sm font-medium text-muted-foreground">Total Courses</p>
           <p className="mt-2 text-2xl font-bold tracking-tight text-foreground tabular-nums">
-            {stats[key]}
+            {stats.coursesCount}
           </p>
         </div>
-      ))}
+      <div
+          className="rounded-xl border border-border bg-card p-5 shadow-sm"
+        >
+          <p className="text-sm font-medium text-muted-foreground">Standard courses</p>
+          <p className="mt-2 text-2xl font-bold tracking-tight text-foreground tabular-nums">
+            {stats.standardCoursesCount}
+          </p>
+        </div>
+      <div
+          className="rounded-xl border border-border bg-card p-5 shadow-sm"
+        >
+          <p className="text-sm font-medium text-muted-foreground">Flexible courses</p>
+          <p className="mt-2 text-2xl font-bold tracking-tight text-foreground tabular-nums">
+            {stats.flexibleCoursesCount}
+          </p>
+        </div>
+      <div
+          className="rounded-xl border border-border bg-card p-5 shadow-sm"
+        >
+          <p className="text-sm font-medium text-muted-foreground">Notes</p>
+          <p className="mt-2 text-2xl font-bold tracking-tight text-foreground tabular-nums">
+            0
+          </p>
+        </div>
     </div>
   );
 }

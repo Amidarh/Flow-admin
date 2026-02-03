@@ -1,7 +1,8 @@
 "use client";
 
-import type { UserCourse } from "../types";
+import { UserCourse } from "@/types";
 import { cn } from "@/lib/utils";
+import moment from "moment";
 
 interface UserDetailsCoursesTabProps {
   courses: UserCourse[];
@@ -50,20 +51,20 @@ export function UserDetailsCoursesTab({ courses, className }: UserDetailsCourses
           <tbody>
             {courses.map((course) => (
               <tr
-                key={course.id}
+                key={course._id}
                 className="border-b border-border/50 transition-colors hover:bg-muted/20 last:border-b-0"
               >
                 <td className="px-5 py-4 text-sm font-medium text-foreground">
                   {course.title}
                 </td>
                 <td className="px-5 py-4 text-sm text-muted-foreground capitalize">
-                  {course.type}
+                  {course.courseType}
                 </td>
                 <td className="px-5 py-4 text-sm text-muted-foreground tabular-nums">
-                  {course.progress}%
+                  {course.status}%
                 </td>
                 <td className="px-5 py-4 text-sm text-muted-foreground tabular-nums">
-                  {course.enrolledAt}
+                  {moment(course.createdAt).fromNow()}
                 </td>
               </tr>
             ))}

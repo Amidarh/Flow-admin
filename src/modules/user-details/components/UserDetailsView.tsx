@@ -1,39 +1,50 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { UserDetailsHeader } from "./UserDetailsHeader";
-import { UserDetailsCard } from "./UserDetailsCard";
-import { UserDetailsStatsCards } from "./UserDetailsStatsCards";
 import { UserDetailsActions } from "./UserDetailsActions";
 import { UserDetailsTabs, type UserDetailsTabId } from "./UserDetailsTabs";
+import { UserDetailsStatsCards } from "./UserDetailsStatsCards";
+import { UserDetailsProfileCard } from "./UserDetailsProfileCard";
 import { UserDetailsNotesTab } from "./UserDetailsNotesTab";
 import { UserDetailsCoursesTab } from "./UserDetailsCoursesTab";
-import type { UserDetails, UserNote, UserCourse } from "../types";
+import { UserDetailsSkeleton } from "./UserDetailsSkeleton";
+import { useUsersService } from "@/modules/users/services";
+import { cn } from "@/lib/utils";
 
-interface UserDetailsViewProps {
-  user: UserDetails;
-  notes: UserNote[];
-  courses: UserCourse[];
-}
-
-export function UserDetailsView({ user, notes, courses }: UserDetailsViewProps) {
+export function UserDetailsView() {
+  const { user, loading, getAUser } = useUsersService({});
   const [activeTab, setActiveTab] = useState<UserDetailsTabId>("details");
-  const [isBlocked, setIsBlocked] = useState(user.isBlocked ?? false);
+  const [blockAction, setBlockAction] = useState<boolean | null>(null);
+  const isBlocked = blockAction !== null ? blockAction : (user?.isBlocked ?? false);
+
+  useEffect(() => {
+    getAUser();
+  }, []);
 
   const handleBlock = () => {
-    setIsBlocked(true);
+    setBlockAction(true);
     // TODO: call API
   };
 
   const handleUnblock = () => {
-    setIsBlocked(false);
+    setBlockAction(false);
     // TODO: call API
   };
 
+  if (loading) {
+    return <UserDetailsSkeleton />;
+  }
+
   return (
-    <div className="space-y-6">
+    <div
+      className={cn(
+        "space-y-6",
+        "animate-in fade-in-0 duration-300 ease-out"
+      )}
+    >
       <UserDetailsHeader
-        title={user.name}
+        title={user?.firstName + " " + user?.lastName}
         backHref="/users"
         backLabel="Back to users"
         actions={
@@ -45,8 +56,11 @@ export function UserDetailsView({ user, notes, courses }: UserDetailsViewProps) 
         }
       />
 
-      <UserDetailsStatsCards stats={user.stats} />
-
+      <UserDetailsStatsCards stats={user ?? {
+        coursesCount: 0,
+        standardCoursesCount: 0,
+        flexibleCoursesCount: 0,
+      }} />
       <UserDetailsTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
       <div
@@ -56,7 +70,7 @@ export function UserDetailsView({ user, notes, courses }: UserDetailsViewProps) 
         hidden={activeTab !== "details"}
         className="pt-2"
       >
-        {activeTab === "details" && <UserDetailsCard user={user} />}
+        {activeTab === "details" && <UserDetailsProfileCard user={user ?? null} />}
       </div>
 
       <div
@@ -66,7 +80,7 @@ export function UserDetailsView({ user, notes, courses }: UserDetailsViewProps) 
         hidden={activeTab !== "notes"}
         className="pt-2"
       >
-        {activeTab === "notes" && <UserDetailsNotesTab notes={notes} />}
+        {activeTab === "notes" && <UserDetailsNotesTab notes={[]} />}
       </div>
 
       <div
@@ -76,7 +90,7 @@ export function UserDetailsView({ user, notes, courses }: UserDetailsViewProps) 
         hidden={activeTab !== "courses"}
         className="pt-2"
       >
-        {activeTab === "courses" && <UserDetailsCoursesTab courses={courses} />}
+        {activeTab === "courses" && <UserDetailsCoursesTab courses={user?.courses ?? []} />}
       </div>
     </div>
   );
