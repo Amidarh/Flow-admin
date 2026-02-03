@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { FlowLogo } from "@/assets/svg";
 
 const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Admin Dashboard" },
@@ -31,7 +32,6 @@ interface SidebarProps {
 function NavLinks({ onLinkClick }: { onLinkClick?: () => void }) {
   const pathname = usePathname();
   const isDashboard = pathname === "/dashboard";
-
   return (
     <>
       {navItems.map(({ href, icon: Icon, label }) => {
@@ -73,7 +73,7 @@ export function Sidebar({ mobileOpen = false, onClose }: SidebarProps) {
       >
         <div className="border-b border-border px-5 py-5">
           <h2 className="text-base font-semibold tracking-tight text-foreground">
-            Flow
+            <FlowLogo className="w-20 h-10" />
           </h2>
           <p className="mt-0.5 text-xs text-muted-foreground">Admin</p>
         </div>

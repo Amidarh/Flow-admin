@@ -10,9 +10,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Menu, RefreshCw, Settings, LogOut, Sun, Moon } from "lucide-react";
+import { Menu, RefreshCw, Settings, LogOut, Sun, Moon, Loader2 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useState, useEffect } from "react";
+import { useLogoutService } from "@/hooks/auth/logout";
 
 interface HeaderProps {
   onMenuClick?: () => void;
@@ -22,7 +23,7 @@ export function Header({ onMenuClick }: HeaderProps) {
   const router = useRouter();
   const { setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-
+  const { logout, isLoading } = useLogoutService();
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 0);
     return () => clearTimeout(t);
@@ -32,6 +33,7 @@ export function Header({ onMenuClick }: HeaderProps) {
 
   const handleLogout = () => {
     // TODO: invalidate session / clear tokens
+    logout();
     router.push("/login");
   };
 
@@ -118,7 +120,7 @@ export function Header({ onMenuClick }: HeaderProps) {
               className="cursor-pointer text-destructive focus:text-destructive"
             >
               <LogOut className="h-4 w-4" />
-              Log out
+              {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Log out"}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
