@@ -17,7 +17,7 @@ interface CourseConfirmModalProps {
   description: string;
   confirmLabel: string;
   variant?: "destructive" | "default";
-  onConfirm: () => void;
+  onConfirm: () => void | Promise<void>;
   isLoading?: boolean;
 }
 
@@ -31,9 +31,13 @@ export function CourseConfirmModal({
   onConfirm,
   isLoading = false,
 }: CourseConfirmModalProps) {
-  const handleConfirm = () => {
-    onConfirm();
-    onOpenChange(false);
+  const handleConfirm = async () => {
+    try {
+      await Promise.resolve(onConfirm());
+      onOpenChange(false);
+    } catch {
+      // Error already handled by caller (e.g. toast); keep modal open
+    }
   };
 
   const handleOpenChange = (next: boolean) => {

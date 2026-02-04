@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Trash2, Ban, CheckCircle } from "lucide-react";
 import type { CourseListItem, CourseType } from "../types";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 interface CoursesTableProps {
   courses: CourseListItem[];
@@ -74,6 +75,7 @@ function CoursesTableRow({
   onDisable,
   onDelete,
 }: CoursesTableRowProps) {
+  const router = useRouter();
   const typeLabel: Record<CourseType, string> = {
     standard: "Standard",
     flexible: "Flexible",
@@ -82,7 +84,7 @@ function CoursesTableRow({
   return (
     <tr className="border-b border-border/50 transition-colors hover:bg-muted/20 last:border-b-0">
       <td className="px-4 py-3 text-sm font-medium text-foreground sm:px-5 sm:py-4">{course.title}</td>
-      <td className="px-4 py-3 text-sm text-muted-foreground sm:px-5 sm:py-4">{course.userEmail}</td>
+      <td onClick={() => router.push(`/users/${course.user?._id}`)} className="px-4 py-3 text-sm text-muted-foreground sm:px-5 sm:py-4 hover:underline cursor-pointer">{course.user?.email}</td>
       <td className="px-4 py-3 text-sm text-muted-foreground tabular-nums sm:px-5 sm:py-4">{course.createdAt}</td>
       <td className="px-4 py-3 sm:px-5 sm:py-4">
         <span

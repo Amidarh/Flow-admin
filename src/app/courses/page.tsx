@@ -1,43 +1,39 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import {
   CoursesPageHeader,
   CoursesTable,
   CourseConfirmModal,
+  CoursesSkeleton,
+  CoursesPagination,
 } from "@/modules/courses";
 import type { CourseListItem } from "@/modules/courses";
+import { useCoursesService } from "@/modules/courses/services";
 
-const MOCK_COURSES: CourseListItem[] = [
-  { id: "1", title: "Introduction to React", userEmail: "john@gmail.com", createdAt: "15-12-2025", courseType: "standard", isDisabled: false },
-  { id: "2", title: "Advanced TypeScript", userEmail: "sarah.smith@email.com", createdAt: "18-12-2025", courseType: "standard", isDisabled: false },
-  { id: "3", title: "Design Systems", userEmail: "alex.j@company.com", createdAt: "20-12-2025", courseType: "flexible", isDisabled: false },
-  { id: "4", title: "Node.js Backend", userEmail: "emma.wilson@gmail.com", createdAt: "5-1-2026", courseType: "standard", isDisabled: true },
-  { id: "5", title: "API Design", userEmail: "mbrown@outlook.com", createdAt: "8-1-2026", courseType: "flexible", isDisabled: false },
-  { id: "6", title: "State Management", userEmail: "lisa.a@yahoo.com", createdAt: "10-1-2026", courseType: "standard", isDisabled: false },
-  { id: "7", title: "Testing & QA", userEmail: "david.lee@mail.com", createdAt: "12-1-2026", courseType: "flexible", isDisabled: false },
-  { id: "8", title: "DevOps Basics", userEmail: "rachel.g@example.com", createdAt: "15-1-2026", courseType: "standard", isDisabled: false },
-  { id: "9", title: "Security Fundamentals", userEmail: "ikechukwudelightemmanuel@gmail.com", createdAt: "20-1-2026", courseType: "standard", isDisabled: false },
-  { id: "10", title: "Performance Optimization", userEmail: "melinda@example.com", createdAt: "25-1-2026", courseType: "flexible", isDisabled: false },
-];
+const PER_PAGE = 10;
 
-type PendingAction = { type: "delete"; course: CourseListItem } | { type: "disable"; course: CourseListItem } | null;
+type PendingAction =
+  | { type: "delete"; course: CourseListItem }
+  | { type: "disable"; course: CourseListItem }
+  | null;
 
 export default function CoursesPage() {
-  const [courses, setCourses] = useState<CourseListItem[]>(MOCK_COURSES);
   const [pendingAction, setPendingAction] = useState<PendingAction>(null);
+  const [actionLoading, setActionLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const {
+    data: courses,
+    pagination,
+    isLoading,
+    error,
+    disableCourse,
+    deleteCourse,
+  } = useCoursesService({ page, limit: PER_PAGE });
 
-  const handleDisable = (course: CourseListItem) => {
-    setCourses((prev) =>
-      prev.map((c) =>
-        c.id === course.id ? { ...c, isDisabled: !c.isDisabled } : c
-      )
-    );
-  };
-
-  const handleDelete = (course: CourseListItem) => {
-    setCourses((prev) => prev.filter((c) => c.id !== course.id));
-  };
+  const handlePageChange = useCallback((newPage: number) => {
+    setPage(newPage);
+  }, []);
 
   const openDeleteModal = (course: CourseListItem) => {
     setPendingAction({ type: "delete", course });
@@ -47,19 +43,51 @@ export default function CoursesPage() {
     setPendingAction({ type: "disable", course });
   };
 
-  const handleConfirmDelete = () => {
-    if (pendingAction?.type === "delete") {
-      handleDelete(pendingAction.course);
+  const handleConfirmDelete = async () => {
+    if (pendingAction?.type !== "delete") return;
+    setActionLoading(true);
+    try {
+      await deleteCourse(pendingAction.course.id);
       setPendingAction(null);
+    } finally {
+      setActionLoading(false);
     }
   };
 
-  const handleConfirmDisable = () => {
-    if (pendingAction?.type === "disable") {
-      handleDisable(pendingAction.course);
+  const handleConfirmDisable = async () => {
+    if (pendingAction?.type !== "disable") return;
+    setActionLoading(true);
+    try {
+      await disableCourse(
+        pendingAction.course.id,
+        !pendingAction.course.isDisabled
+      );
       setPendingAction(null);
+    } finally {
+      setActionLoading(false);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="animate-in fade-in-0 duration-200">
+        <CoursesSkeleton />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <CoursesPageHeader />
+        <div className="rounded-xl border border-destructive/30 bg-destructive/5 px-4 py-4 text-sm text-destructive">
+          Failed to load courses. Please try again later.
+        </div>
+      </div>
+    );
+  }
+
+  const { total } = pagination;
 
   return (
     <div className="space-y-6">
@@ -68,6 +96,12 @@ export default function CoursesPage() {
         courses={courses}
         onDisable={openDisableModal}
         onDelete={openDeleteModal}
+      />
+      <CoursesPagination
+        page={page}
+        perPage={PER_PAGE}
+        total={total}
+        onPageChange={handlePageChange}
       />
 
       {pendingAction?.type === "delete" && (
@@ -79,6 +113,7 @@ export default function CoursesPage() {
           confirmLabel="Delete"
           variant="destructive"
           onConfirm={handleConfirmDelete}
+          isLoading={actionLoading}
         />
       )}
 
@@ -86,7 +121,9 @@ export default function CoursesPage() {
         <CourseConfirmModal
           open={true}
           onOpenChange={(open) => !open && setPendingAction(null)}
-          title={pendingAction.course.isDisabled ? "Enable course" : "Disable course"}
+          title={
+            pendingAction.course.isDisabled ? "Enable course" : "Disable course"
+          }
           description={
             pendingAction.course.isDisabled
               ? `Are you sure you want to enable "${pendingAction.course.title}"? Users will be able to access it again.`
@@ -95,6 +132,7 @@ export default function CoursesPage() {
           confirmLabel={pendingAction.course.isDisabled ? "Enable" : "Disable"}
           variant="default"
           onConfirm={handleConfirmDisable}
+          isLoading={actionLoading}
         />
       )}
     </div>

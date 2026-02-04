@@ -248,3 +248,15 @@ export interface CourseType {
     chapters: number,
     lessons: number,
   }
+
+export interface CourseListResponseType {
+  data: {
+    courses: CourseListItem[];
+    pagination: {
+      total: number;
+      page: number;
+      limit: number;
+      pages: number;
+    };
+  }
+}

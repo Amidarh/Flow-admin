@@ -17,10 +17,10 @@ import { FlowLogo } from "@/assets/svg";
 
 const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Admin Dashboard" },
-  { href: "/admins", icon: Shield, label: "Admins" },
+  // { href: "/admins", icon: Shield, label: "Admins" },
   { href: "/users", icon: Users, label: "Users" },
   { href: "/courses", icon: BookOpen, label: "Courses" },
-  { href: "/notes", icon: FileText, label: "Notes" },
+  // { href: "/notes", icon: FileText, label: "Notes" },
   { href: "/dashboard/settings", icon: Settings, label: "Settings" },
 ];
 
