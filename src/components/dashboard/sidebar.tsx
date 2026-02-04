@@ -5,11 +5,10 @@ import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   Users,
-  Shield,
   BookOpen,
-  FileText,
   Settings,
   X,
+  BadgeDollarSign,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -20,6 +19,7 @@ const navItems = [
   // { href: "/admins", icon: Shield, label: "Admins" },
   { href: "/users", icon: Users, label: "Users" },
   { href: "/courses", icon: BookOpen, label: "Courses" },
+  { href: "/plans", icon: BadgeDollarSign, label: "Plans" },
   // { href: "/notes", icon: FileText, label: "Notes" },
   { href: "/dashboard/settings", icon: Settings, label: "Settings" },
 ];

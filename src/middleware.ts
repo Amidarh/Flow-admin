@@ -11,6 +11,7 @@ const ROUTE_PERMISSIONS: Record<string, string> = {
     '/courses': 'courses',
     '/notes': 'notes',
     '/settings': 'settings',
+    '/plans': 'plans',
 };
 
 const AUTH_ROUTES = [
