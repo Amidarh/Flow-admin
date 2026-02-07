@@ -13,23 +13,27 @@ import { useUsersService } from "@/modules/users/services";
 import { cn } from "@/lib/utils";
 
 export function UserDetailsView() {
-  const { user, loading, getAUser } = useUsersService({});
+  const {
+    user,
+    loading,
+    getAUser,
+    blockUser,
+    unblockUser,
+    blockLoading,
+  } = useUsersService({});
   const [activeTab, setActiveTab] = useState<UserDetailsTabId>("details");
-  const [blockAction, setBlockAction] = useState<boolean | null>(null);
-  const isBlocked = blockAction !== null ? blockAction : (user?.isBlocked ?? false);
 
   useEffect(() => {
     getAUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- fetch user once on mount
   }, []);
 
-  const handleBlock = () => {
-    setBlockAction(true);
-    // TODO: call API
+  const handleBlock = async () => {
+    await blockUser();
   };
 
-  const handleUnblock = () => {
-    setBlockAction(false);
-    // TODO: call API
+  const handleUnblock = async () => {
+    await unblockUser();
   };
 
   if (loading) {
@@ -49,9 +53,10 @@ export function UserDetailsView() {
         backLabel="Back to users"
         actions={
           <UserDetailsActions
-            isBlocked={isBlocked}
+            isBlocked={user?.isBlocked ?? false}
             onBlock={handleBlock}
             onUnblock={handleUnblock}
+            isLoading={blockLoading}
           />
         }
       />

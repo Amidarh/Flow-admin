@@ -11,6 +11,7 @@ export const useUsersService = (queryParams: Record<string, any>) => {
     const [ user, setUser ] = useState<UserDetailsData | null>(null)
     const { id } = useParams<{ id: string }>()
     const [ loading, setLoading ] = useState<boolean>(false)
+    const [ blockLoading, setBlockLoading ] = useState<boolean>(false)
 
     const queryString = toQueryString(queryParams);
     const url = `/admin/users?${queryString ? `?${queryString}` : ''}`;
@@ -30,6 +31,36 @@ export const useUsersService = (queryParams: Record<string, any>) => {
         }
     }
 
+  const blockUser = async () => {
+    if (!id) return;
+    setBlockLoading(true);
+    try {
+      const response = await api.post(`/auth/block-user/${id}`);
+      toast.success(response.data?.message ?? "User blocked successfully");
+      await mutate();
+      await getAUser();
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || error?.message || "Something went wrong");
+    } finally {
+      setBlockLoading(false);
+    }
+  };
+
+  const unblockUser = async () => {
+    if (!id) return;
+    setBlockLoading(true);
+    try {
+      const response = await api.post(`/auth/unblock-user/${id}`);
+      toast.success(response.data?.message ?? "User unblocked successfully");
+      await mutate();
+      await getAUser();
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || error?.message || "Something went wrong");
+    } finally {
+      setBlockLoading(false);
+    }
+  };
+
   return {
     data,
     isLoading,
@@ -44,5 +75,8 @@ export const useUsersService = (queryParams: Record<string, any>) => {
     loading,
     user,
     getAUser,
+    blockUser,
+    unblockUser,
+    blockLoading,
   };
 };
