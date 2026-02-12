@@ -36,10 +36,11 @@ export function UserDetailsProfileCard({ user, className }: UserDetailsProfileCa
   const joined = user.createdAt
     ? moment(user.createdAt).format("DD MMM YYYY")
     : "–";
-  const lastLogin = user.lastLogin
+  const lastLoginLabel = user.lastLogin
     ? moment(user.lastLogin).format("DD MMM YYYY, HH:mm")
     : "–";
   const status = user.isBlocked ? "Blocked" : "Active";
+  // const subscriptionLabel = user.subscription?.trim() || "–";
 
   return (
     <div
@@ -58,6 +59,7 @@ export function UserDetailsProfileCard({ user, className }: UserDetailsProfileCa
         <DetailRow label="Full name" value={fullName} valueClassName="font-medium" />
         <DetailRow label="Email" value={user.email} />
         <DetailRow label="Role" value={user.role} />
+        {/* <DetailRow label="Subscription" value={subscriptionLabel} /> */}
         <DetailRow
           label="Status"
           value={
@@ -74,7 +76,11 @@ export function UserDetailsProfileCard({ user, className }: UserDetailsProfileCa
           }
         />
         <DetailRow label="Joined" value={joined} valueClassName="tabular-nums" />
-        <DetailRow label="Last login" value={lastLogin} valueClassName="tabular-nums text-muted-foreground" />
+        <DetailRow
+          label="Last login"
+          value={lastLoginLabel}
+          valueClassName="tabular-nums font-medium text-foreground"
+        />
         <DetailRow label="Verified" value={user.isVerified ? "Yes" : "No"} />
         {user.isTwoFactorAuthEnabled != null && (
           <DetailRow

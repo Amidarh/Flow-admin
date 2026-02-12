@@ -100,6 +100,19 @@ export interface UserDetailsData {
   flexibleCoursesCount: number;
   standardCoursesCount: number;
   courses: UserCourse[];
+  subscription?: string;
+  loginHistory?: {
+    ipAddress: string,
+    device: string,
+    browser: string,
+    os1: string,
+    os2: string,
+    country: string,
+    region: string,
+    city: string,
+    timezone: string,
+    ll: string[] // [lat, long]
+  }[];
 }
 
 export interface UserDetailsResponse {

@@ -6,6 +6,7 @@ import { UserDetailsActions } from "./UserDetailsActions";
 import { UserDetailsTabs, type UserDetailsTabId } from "./UserDetailsTabs";
 import { UserDetailsStatsCards } from "./UserDetailsStatsCards";
 import { UserDetailsProfileCard } from "./UserDetailsProfileCard";
+import { UserDetailsLoginHistoryCard } from "./UserDetailsLoginHistoryCard";
 import { UserDetailsNotesTab } from "./UserDetailsNotesTab";
 import { UserDetailsCoursesTab } from "./UserDetailsCoursesTab";
 import { UserDetailsSkeleton } from "./UserDetailsSkeleton";
@@ -73,9 +74,14 @@ export function UserDetailsView() {
         role="tabpanel"
         aria-labelledby="tab-details"
         hidden={activeTab !== "details"}
-        className="pt-2"
+        className="pt-2 space-y-6"
       >
-        {activeTab === "details" && <UserDetailsProfileCard user={user ?? null} />}
+        {activeTab === "details" && (
+          <>
+            <UserDetailsProfileCard user={user ?? null} />
+            <UserDetailsLoginHistoryCard loginHistory={user?.loginHistory} />
+          </>
+        )}
       </div>
 
       <div

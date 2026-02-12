@@ -4,6 +4,7 @@ export { UserDetailsStatsCards } from "./components/UserDetailsStatsCards";
 export { UserDetailsActions } from "./components/UserDetailsActions";
 export { UserDetailsTabs } from "./components/UserDetailsTabs";
 export type { UserDetailsTabId } from "./components/UserDetailsTabs";
+export { UserDetailsLoginHistoryCard } from "./components/UserDetailsLoginHistoryCard";
 export { UserDetailsNotesTab } from "./components/UserDetailsNotesTab";
 export { UserDetailsCoursesTab } from "./components/UserDetailsCoursesTab";
 export { UserDetailsView } from "./components/UserDetailsView";
