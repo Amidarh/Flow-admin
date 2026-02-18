@@ -5,6 +5,7 @@ import { Trash2, Ban, CheckCircle } from "lucide-react";
 import type { CourseListItem, CourseType } from "../types";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import moment from "moment";
 
 interface CoursesTableProps {
   courses: CourseListItem[];
@@ -85,7 +86,7 @@ function CoursesTableRow({
     <tr className="border-b border-border/50 transition-colors hover:bg-muted/20 last:border-b-0">
       <td className="px-4 py-3 text-sm font-medium text-foreground sm:px-5 sm:py-4">{course.title}</td>
       <td onClick={() => router.push(`/users/${course.user?._id}`)} className="px-4 py-3 text-sm text-muted-foreground sm:px-5 sm:py-4 hover:underline cursor-pointer">{course.user?.email}</td>
-      <td className="px-4 py-3 text-sm text-muted-foreground tabular-nums sm:px-5 sm:py-4">{course.createdAt}</td>
+      <td className="px-4 py-3 text-sm text-muted-foreground tabular-nums sm:px-5 sm:py-4">{moment(course.createdAt).fromNow()}</td>
       <td className="px-4 py-3 sm:px-5 sm:py-4">
         <span
           className={cn(
