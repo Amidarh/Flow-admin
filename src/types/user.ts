@@ -101,6 +101,11 @@ export interface UserDetailsData {
   standardCoursesCount: number;
   courses: UserCourse[];
   subscription?: string;
+  byokEntitled?: boolean;
+  byokEntitlementSource?: "subscription" | "admin" | null;
+  byokAccessGranted?: boolean;
+  byokAccessExpiresAt?: string | null;
+  byokExpiresAt?: string | null;
   loginHistory?: {
     ipAddress: string,
     device: string,

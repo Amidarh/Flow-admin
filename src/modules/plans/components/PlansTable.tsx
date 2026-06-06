@@ -76,7 +76,18 @@ function PlansTableRow({ plan }: PlansTableRowProps) {
     <tr className="border-b border-border/50 transition-colors hover:bg-muted/20 last:border-b-0">
       <td className="px-4 py-3 text-sm font-medium text-foreground sm:px-5 sm:py-4">
         <div className="space-y-0.5">
-          <span>{plan.name}</span>
+          <div className="flex flex-wrap items-center gap-2">
+            <span>{plan.name}</span>
+            {plan.isByokPlan ? (
+              <span className="rounded-full bg-violet-500/10 px-2 py-0.5 text-[10px] font-medium text-violet-600">
+                BYOK
+              </span>
+            ) : plan.supportsByok ? (
+              <span className="rounded-full bg-violet-500/10 px-2 py-0.5 text-[10px] font-medium text-violet-600">
+                +BYOK
+              </span>
+            ) : null}
+          </div>
           {plan.description && (
             <p className="text-xs text-muted-foreground line-clamp-1">
               {plan.description}

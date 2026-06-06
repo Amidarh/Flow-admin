@@ -41,6 +41,8 @@ export function PlanForm({ mode, plan, onSubmit }: PlanFormProps) {
       Number(plan?.contentLimitPerFlexibleCourse) ?? 0,
     isActive: plan?.isActive !== false,
     numberOfCourses: Number(plan?.numberOfCourses) ?? 0,
+    supportsByok: plan?.supportsByok === true,
+    isByokPlan: plan?.isByokPlan === true,
   }));
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -311,6 +313,54 @@ export function PlanForm({ mode, plan, onSubmit }: PlanFormProps) {
                 onChange={handleChange}
                 className={inputClass}
               />
+            </div>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="flex items-center justify-between rounded-lg border border-border bg-muted/40 px-3.5 py-3">
+              <div className="space-y-0.5">
+                <p className="text-sm font-medium text-foreground">
+                  BYOK access
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Allows users to use their own API keys when subscribed.
+                </p>
+              </div>
+              <label className="inline-flex cursor-pointer items-center gap-2">
+                <input
+                  type="checkbox"
+                  name="supportsByok"
+                  checked={form.supportsByok === true}
+                  onChange={handleChange}
+                  className="h-4 w-4 rounded border-input"
+                />
+              </label>
+            </div>
+            <div className="flex items-center justify-between rounded-lg border border-border bg-muted/40 px-3.5 py-3">
+              <div className="space-y-0.5">
+                <p className="text-sm font-medium text-foreground">
+                  BYOK-only plan
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Does not replace course subscription; grants API key access only.
+                </p>
+              </div>
+              <label className="inline-flex cursor-pointer items-center gap-2">
+                <input
+                  type="checkbox"
+                  name="isByokPlan"
+                  checked={form.isByokPlan === true}
+                  onChange={(e) => {
+                    const checked = e.target.checked;
+                    setForm((prev) => ({
+                      ...prev,
+                      isByokPlan: checked,
+                      supportsByok: checked ? true : prev.supportsByok,
+                    }));
+                  }}
+                  className="h-4 w-4 rounded border-input"
+                />
+              </label>
             </div>
           </div>
 

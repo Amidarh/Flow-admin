@@ -75,6 +75,8 @@ export interface UpsertPlanPayload {
   contentLimitPerFlexibleCourse: number;
   isActive: boolean;
   numberOfCourses: number;
+  supportsByok: boolean;
+  isByokPlan: boolean;
 }
 
 /** Ensures every required field is present with correct type so backend validation passes. */
@@ -99,6 +101,8 @@ function normalizePlanPayload(
     contentLimitPerFlexibleCourse: num(payload.contentLimitPerFlexibleCourse),
     isActive: payload.isActive !== false,
     numberOfCourses: num(payload.numberOfCourses),
+    supportsByok: payload.supportsByok === true,
+    isByokPlan: payload.isByokPlan === true,
   };
 }
 

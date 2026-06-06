@@ -14,6 +14,8 @@ export interface IPlan {
   contentLimitPerFlexibleCourse: number;
   isActive: boolean;
   numberOfCourses: number;
+  supportsByok: boolean;
+  isByokPlan: boolean;
   isDefault?: boolean;
 }
 

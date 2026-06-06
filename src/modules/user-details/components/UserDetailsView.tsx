@@ -6,6 +6,7 @@ import { UserDetailsActions } from "./UserDetailsActions";
 import { UserDetailsTabs, type UserDetailsTabId } from "./UserDetailsTabs";
 import { UserDetailsStatsCards } from "./UserDetailsStatsCards";
 import { UserDetailsProfileCard } from "./UserDetailsProfileCard";
+import { UserDetailsByokCard } from "./UserDetailsByokCard";
 import { UserDetailsLoginHistoryCard } from "./UserDetailsLoginHistoryCard";
 import { UserDetailsNotesTab } from "./UserDetailsNotesTab";
 import { UserDetailsCoursesTab } from "./UserDetailsCoursesTab";
@@ -79,6 +80,7 @@ export function UserDetailsView() {
         {activeTab === "details" && (
           <>
             <UserDetailsProfileCard user={user ?? null} />
+            <UserDetailsByokCard user={user ?? null} onUpdated={getAUser} />
             <UserDetailsLoginHistoryCard loginHistory={user?.loginHistory} />
           </>
         )}

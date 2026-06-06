@@ -9,5 +9,7 @@ export interface PlanListItem {
   numberOfCourses: number;
   isActive: boolean;
   isDefault?: boolean;
+  supportsByok?: boolean;
+  isByokPlan?: boolean;
 }
 
