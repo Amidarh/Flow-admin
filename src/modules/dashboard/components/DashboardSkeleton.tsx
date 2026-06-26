@@ -39,28 +39,72 @@ export function DashboardSkeleton() {
         ))}
       </div>
 
-      {/* Chart card skeleton */}
-      <Card className="rounded-xl border-border bg-card shadow-sm">
-        <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between space-y-0 px-4 pb-4 sm:px-6">
-          <Skeleton className="h-5 w-44" />
-          <Skeleton className="h-6 w-28 shrink-0 rounded-full" />
-        </CardHeader>
-        <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
-          <div className="h-[220px] w-full min-h-[200px] sm:h-[260px] rounded-lg overflow-hidden">
-            <div className="flex h-full w-full items-end justify-between gap-1 px-2 pb-8 pt-4">
-              {Array.from({ length: 12 }).map((_, i) => (
-                <Skeleton
-                  key={i}
-                  className="flex-1 min-w-0 rounded-t"
-                  style={{
-                    height: `${25 + (Math.sin((i / 11) * Math.PI) * 55)}%`,
-                  }}
-                />
-              ))}
+      {/* Activity & subscription summary cards skeleton */}
+      <div className="grid gap-4 sm:gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <Card
+            key={i}
+            className="rounded-xl border-border bg-card shadow-sm"
+          >
+            <CardContent className="px-4 py-4 sm:px-6">
+              <Skeleton className="h-4 w-24" />
+              <Skeleton className="mt-3 h-8 w-16 sm:h-9 sm:w-20" />
+              <Skeleton className="mt-3 h-4 w-28" />
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* Chart card skeletons */}
+      <div className="grid gap-4 sm:gap-5 lg:grid-cols-2">
+        <Card className="rounded-xl border-border bg-card shadow-sm lg:col-span-2">
+          <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between space-y-0 px-4 pb-4 sm:px-6">
+            <Skeleton className="h-5 w-44" />
+            <Skeleton className="h-6 w-28 shrink-0 rounded-full" />
+          </CardHeader>
+          <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
+            <div className="h-[220px] w-full min-h-[200px] sm:h-[260px] rounded-lg overflow-hidden">
+              <div className="flex h-full w-full items-end justify-between gap-1 px-2 pb-8 pt-4">
+                {Array.from({ length: 12 }).map((_, i) => (
+                  <Skeleton
+                    key={i}
+                    className="flex-1 min-w-0 rounded-t"
+                    style={{
+                      height: `${25 + (Math.sin((i / 11) * Math.PI) * 55)}%`,
+                    }}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+        {Array.from({ length: 2 }).map((_, i) => (
+          <Card
+            key={i}
+            className="rounded-xl border-border bg-card shadow-sm"
+          >
+            <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between space-y-0 px-4 pb-4 sm:px-6">
+              <Skeleton className="h-5 w-44" />
+              <Skeleton className="h-6 w-28 shrink-0 rounded-full" />
+            </CardHeader>
+            <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
+              <div className="h-[220px] w-full min-h-[200px] sm:h-[260px] rounded-lg overflow-hidden">
+                <div className="flex h-full w-full items-end justify-between gap-1 px-2 pb-8 pt-4">
+                  {Array.from({ length: 10 }).map((_, j) => (
+                    <Skeleton
+                      key={j}
+                      className="flex-1 min-w-0 rounded-t"
+                      style={{
+                        height: `${25 + (Math.sin((j / 9) * Math.PI) * 55)}%`,
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
 
       {/* Latest users table skeleton */}
       <Card className="overflow-hidden rounded-xl border-border bg-card shadow-sm">

@@ -7,8 +7,13 @@ export interface PlanListItem {
   interval: string;
   interval_count: number;
   numberOfCourses: number;
+  allowsFlexibleCourses?: boolean;
+  numberOfFlexibleCourses?: number;
+  allowsStandardCourses?: boolean;
+  numberOfStandardCourses?: number;
   isActive: boolean;
   isDefault?: boolean;
+  isRecommended?: boolean;
   supportsByok?: boolean;
   isByokPlan?: boolean;
 }

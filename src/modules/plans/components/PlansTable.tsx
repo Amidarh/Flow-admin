@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { BadgeCheck, CircleOff, Pencil, Star } from "lucide-react";
+import { BadgeCheck, CircleOff, Pencil, Sparkles, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { PlanListItem } from "../types";
 
@@ -15,8 +15,10 @@ const TABLE_HEADERS = [
   { key: "name", label: "Plan" },
   { key: "price", label: "Price" },
   { key: "interval", label: "Billing" },
-  { key: "numberOfCourses", label: "Courses" },
+  { key: "flexibleCourses", label: "Flexible" },
+  { key: "standardCourses", label: "Standard" },
   { key: "default", label: "Default" },
+  { key: "recommended", label: "Recommended" },
   { key: "status", label: "Status" },
   { key: "actions", label: "Action" },
 ] as const;
@@ -30,7 +32,7 @@ export function PlansTable({ plans, className }: PlansTableProps) {
       )}
     >
       <div className="overflow-x-auto -mx-4 sm:mx-0">
-        <table className="w-full min-w-[800px] border-collapse">
+        <table className="w-full min-w-[950px] border-collapse">
           <thead>
             <tr className="border-b border-border bg-muted/30">
               {TABLE_HEADERS.map(({ key, label }) => (
@@ -71,6 +73,12 @@ function formatInterval(plan: PlanListItem) {
   return `${count} ${unit}${plural}`;
 }
 
+function formatCourseTypeLimit(allows: boolean | undefined, limit: number | undefined) {
+  if (allows === false) return "No access";
+  if (limit == null || limit <= 0) return "Unlimited";
+  return String(limit);
+}
+
 function PlansTableRow({ plan }: PlansTableRowProps) {
   return (
     <tr className="border-b border-border/50 transition-colors hover:bg-muted/20 last:border-b-0">
@@ -102,13 +110,26 @@ function PlansTableRow({ plan }: PlansTableRowProps) {
         {formatInterval(plan)}
       </td>
       <td className="px-4 py-3 text-sm text-muted-foreground sm:px-5 sm:py-4">
-        {plan.numberOfCourses ?? "Unlimited"}
+        {formatCourseTypeLimit(plan.allowsFlexibleCourses, plan.numberOfFlexibleCourses)}
+      </td>
+      <td className="px-4 py-3 text-sm text-muted-foreground sm:px-5 sm:py-4">
+        {formatCourseTypeLimit(plan.allowsStandardCourses, plan.numberOfStandardCourses)}
       </td>
       <td className="px-4 py-3 sm:px-5 sm:py-4">
         {plan.isDefault ? (
           <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
             <Star className="h-3.5 w-3.5 fill-current" />
             Default
+          </span>
+        ) : (
+          <span className="text-xs text-muted-foreground">—</span>
+        )}
+      </td>
+      <td className="px-4 py-3 sm:px-5 sm:py-4">
+        {plan.isRecommended ? (
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 px-2.5 py-1 text-xs font-medium text-amber-600 dark:text-amber-400">
+            <Sparkles className="h-3.5 w-3.5 fill-current" />
+            Recommended
           </span>
         ) : (
           <span className="text-xs text-muted-foreground">—</span>

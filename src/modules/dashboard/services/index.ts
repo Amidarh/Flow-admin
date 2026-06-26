@@ -1,10 +1,13 @@
 import { fetcher } from "@/lib/fetcher";
-import { DashboardSummary } from "@/types/dashboard";
+import { AnalyticsRange, DashboardSummary } from "@/types/dashboard";
 import useSWR from "swr";
 
-export const useDashboardService = () => {
+export const useDashboardService = (range: AnalyticsRange = "30d") => {
 
-    const { data, isLoading, error } = useSWR<DashboardSummary>("/admin/analytics", fetcher);
+    const { data, isLoading, error } = useSWR<DashboardSummary>(
+        `/admin/analytics?range=${range}`,
+        fetcher
+    );
 
     return {
         data: data?.data,

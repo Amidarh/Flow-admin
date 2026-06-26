@@ -61,6 +61,21 @@ export const setPlanAsDefault = async (planId: string) => {
   }
 };
 
+export const setPlanAsRecommended = async (planId: string) => {
+  try {
+    const res = await api.put(`/plans/${planId}/set-as-recommended`);
+    toast.success(res.data?.message ?? "Recommended plan updated.");
+    return res.data;
+  } catch (err: unknown) {
+    const message =
+      err && typeof err === "object" && "response" in err
+        ? (err as { response?: { data?: { message?: string } } }).response?.data?.message
+        : null;
+    toast.error(message ?? "Failed to set recommended plan.");
+    throw err;
+  }
+};
+
 export interface UpsertPlanPayload {
   name: string;
   description: string;
@@ -74,7 +89,12 @@ export interface UpsertPlanPayload {
   quizLimitPerFlexibleCourse: number;
   contentLimitPerFlexibleCourse: number;
   isActive: boolean;
+  /** Derived total (flexible + standard); sent for backward compat but not trusted by the backend. */
   numberOfCourses: number;
+  allowsFlexibleCourses: boolean;
+  numberOfFlexibleCourses: number;
+  allowsStandardCourses: boolean;
+  numberOfStandardCourses: number;
   supportsByok: boolean;
   isByokPlan: boolean;
 }
@@ -101,6 +121,10 @@ function normalizePlanPayload(
     contentLimitPerFlexibleCourse: num(payload.contentLimitPerFlexibleCourse),
     isActive: payload.isActive !== false,
     numberOfCourses: num(payload.numberOfCourses),
+    allowsFlexibleCourses: payload.allowsFlexibleCourses !== false,
+    numberOfFlexibleCourses: num(payload.numberOfFlexibleCourses),
+    allowsStandardCourses: payload.allowsStandardCourses !== false,
+    numberOfStandardCourses: num(payload.numberOfStandardCourses),
     supportsByok: payload.supportsByok === true,
     isByokPlan: payload.isByokPlan === true,
   };

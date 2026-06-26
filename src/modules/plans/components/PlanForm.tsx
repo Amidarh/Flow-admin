@@ -41,6 +41,10 @@ export function PlanForm({ mode, plan, onSubmit }: PlanFormProps) {
       Number(plan?.contentLimitPerFlexibleCourse) ?? 0,
     isActive: plan?.isActive !== false,
     numberOfCourses: Number(plan?.numberOfCourses) ?? 0,
+    allowsFlexibleCourses: plan?.allowsFlexibleCourses !== false,
+    numberOfFlexibleCourses: Number(plan?.numberOfFlexibleCourses) ?? 0,
+    allowsStandardCourses: plan?.allowsStandardCourses !== false,
+    numberOfStandardCourses: Number(plan?.numberOfStandardCourses) ?? 0,
     supportsByok: plan?.supportsByok === true,
     isByokPlan: plan?.isByokPlan === true,
   }));
@@ -242,27 +246,78 @@ export function PlanForm({ mode, plan, onSubmit }: PlanFormProps) {
             </div>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-3">
-            <div className="space-y-2">
-              <label
-                htmlFor="plan-number-of-courses"
-                className="text-sm font-medium text-foreground"
-              >
-                Number of courses
-              </label>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-3 rounded-lg border border-border bg-muted/40 px-3.5 py-3">
+              <div className="flex items-center justify-between">
+                <label
+                  htmlFor="plan-allows-flexible-courses"
+                  className="text-sm font-medium text-foreground"
+                >
+                  Flexible courses
+                </label>
+                <label className="inline-flex cursor-pointer items-center gap-2">
+                  <input
+                    id="plan-allows-flexible-courses"
+                    type="checkbox"
+                    name="allowsFlexibleCourses"
+                    checked={form.allowsFlexibleCourses === true}
+                    onChange={handleChange}
+                    className="h-4 w-4 rounded border-input"
+                  />
+                </label>
+              </div>
               <input
-                id="plan-number-of-courses"
-                name="numberOfCourses"
+                id="plan-number-of-flexible-courses"
+                name="numberOfFlexibleCourses"
                 type="number"
                 min={0}
-                value={form.numberOfCourses ?? 0}
+                disabled={!form.allowsFlexibleCourses}
+                value={form.numberOfFlexibleCourses ?? 0}
                 onChange={handleChange}
-                className={inputClass}
+                className={inputClass + " disabled:opacity-50"}
               />
               <p className="text-xs text-muted-foreground">
-                Use 0 for unlimited courses.
+                Use 0 for unlimited flexible courses. Uncheck to disable
+                flexible course access entirely on this plan.
               </p>
             </div>
+            <div className="space-y-3 rounded-lg border border-border bg-muted/40 px-3.5 py-3">
+              <div className="flex items-center justify-between">
+                <label
+                  htmlFor="plan-allows-standard-courses"
+                  className="text-sm font-medium text-foreground"
+                >
+                  Standard courses
+                </label>
+                <label className="inline-flex cursor-pointer items-center gap-2">
+                  <input
+                    id="plan-allows-standard-courses"
+                    type="checkbox"
+                    name="allowsStandardCourses"
+                    checked={form.allowsStandardCourses === true}
+                    onChange={handleChange}
+                    className="h-4 w-4 rounded border-input"
+                  />
+                </label>
+              </div>
+              <input
+                id="plan-number-of-standard-courses"
+                name="numberOfStandardCourses"
+                type="number"
+                min={0}
+                disabled={!form.allowsStandardCourses}
+                value={form.numberOfStandardCourses ?? 0}
+                onChange={handleChange}
+                className={inputClass + " disabled:opacity-50"}
+              />
+              <p className="text-xs text-muted-foreground">
+                Use 0 for unlimited standard courses. Uncheck to disable
+                standard course access entirely on this plan.
+              </p>
+            </div>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-3">
             <div className="space-y-2">
               <label
                 htmlFor="plan-flashcard-limit"
@@ -342,7 +397,8 @@ export function PlanForm({ mode, plan, onSubmit }: PlanFormProps) {
                   BYOK-only plan
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  Does not replace course subscription; grants API key access only.
+                  Replaces the user&apos;s course subscription on purchase.
+                  Unlimited course creation via their own API keys.
                 </p>
               </div>
               <label className="inline-flex cursor-pointer items-center gap-2">

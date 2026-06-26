@@ -13,10 +13,18 @@ export interface IPlan {
   quizLimitPerFlexibleCourse: number;
   contentLimitPerFlexibleCourse: number;
   isActive: boolean;
+  /** Derived total (flexible + standard); kept in sync, not a direct admin input. */
   numberOfCourses: number;
+  allowsFlexibleCourses: boolean;
+  numberOfFlexibleCourses: number;
+  allowsStandardCourses: boolean;
+  numberOfStandardCourses: number;
   supportsByok: boolean;
   isByokPlan: boolean;
+  /** The plan auto-assigned to new signups. Exclusive: only one plan can be default. */
   isDefault?: boolean;
+  /** The plan featured to users as "Recommended". Exclusive, independent of isDefault. */
+  isRecommended?: boolean;
 }
 
 export interface PlanListPagination {

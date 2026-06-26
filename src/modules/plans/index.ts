@@ -4,5 +4,6 @@ export { PlansPagination } from "./components/PlansPagination";
 export { PlanForm } from "./components/PlanForm";
 export { PlanDetailsHeader } from "./components/PlanDetailsHeader";
 export { SetDefaultPlanModal } from "./components/SetDefaultPlanModal";
+export { SetRecommendedPlanModal } from "./components/SetRecommendedPlanModal";
 export type { PlanListItem } from "./types";
 

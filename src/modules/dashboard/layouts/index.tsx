@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import {
   Card,
@@ -20,44 +21,94 @@ import {
   CartesianGrid,
   Area,
   AreaChart,
+  Bar,
+  BarChart,
 } from "recharts";
 import { useDashboardService } from "../services";
 import { DashboardSkeleton } from "../components/DashboardSkeleton";
+import { RangeFilter } from "../components/RangeFilter";
 import { cn } from "@/lib/utils";
 import moment from "moment";
-import type { DashboardSummaryData } from "@/types/dashboard";
+import type {
+  AnalyticsGranularity,
+  AnalyticsRange,
+  DashboardSummaryData,
+} from "@/types/dashboard";
 
 const signupsChartConfig = {
   signups: { label: "Signups", color: "var(--chart-1)" },
 };
 
+const usageChartConfig = {
+  flexible: { label: "Flexible courses", color: "var(--chart-2)" },
+  standard: { label: "Standard courses", color: "var(--chart-3)" },
+};
+
+const planChartConfig = {
+  count: { label: "Active subscribers", color: "var(--chart-4)" },
+};
+
+const RANGE_BADGE_LABELS: Record<AnalyticsRange, string> = {
+  "7d": "Last 7 days",
+  "30d": "Last 30 days",
+  "6m": "Last 6 months",
+  "1y": "Last 1 year",
+  "5y": "Last 5 years",
+};
+
+function formatBucketLabel(
+  bucket: string,
+  granularity: AnalyticsGranularity
+): string {
+  if (granularity === "month") {
+    return moment(bucket, "YYYY-MM").format("MMM YY");
+  }
+  return moment(bucket, "YYYY-MM-DD").format("MMM D");
+}
+
 function mapUserSignupsToChartData(
-  items: DashboardSummaryData["userSignupsByMonth"]
-): { month: string; signups: number }[] {
+  items: DashboardSummaryData["signupsSeries"],
+  granularity: AnalyticsGranularity
+): { bucket: string; signups: number }[] {
   if (!items?.length) return [];
-  const sorted = [...items].sort(
-    (a, b) => a.year - b.year || a.month - b.month
-  );
-  return sorted.map(({ year, month, count }) => ({
-    month: moment({ year, month: month - 1, day: 1 }).format("MMM YY"),
+  return items.map(({ bucket, count }) => ({
+    bucket: formatBucketLabel(bucket, granularity),
     signups: count,
   }));
 }
 
-export function DashboardContent() {
-  const { isLoading, data } = useDashboardService();
+function mapUsageToChartData(
+  items: DashboardSummaryData["courseCreationSeries"],
+  granularity: AnalyticsGranularity
+): { bucket: string; flexible: number; standard: number }[] {
+  if (!items?.length) return [];
+  return items.map(({ bucket, flexible, standard }) => ({
+    bucket: formatBucketLabel(bucket, granularity),
+    flexible,
+    standard,
+  }));
+}
 
-  if (isLoading) {
-    return <DashboardSkeleton />;
-  }
+export function DashboardContent() {
+  const [range, setRange] = useState<AnalyticsRange>("30d");
+  const { isLoading, data } = useDashboardService(range);
+  const granularity: AnalyticsGranularity = data?.granularity ?? "day";
 
   return (
-    <div
-      className={cn(
-        "space-y-6 sm:space-y-8",
-        "animate-in fade-in-0 duration-300 ease-out"
-      )}
-    >
+    <div className="space-y-4 sm:space-y-5">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h1 className="text-lg font-semibold tracking-tight text-foreground sm:text-xl">
+          Dashboard
+        </h1>
+        <RangeFilter value={range} onChange={setRange} />
+      </div>
+      {isLoading ? <DashboardSkeleton /> : (
+      <div
+        className={cn(
+          "space-y-6 sm:space-y-8",
+          "animate-in fade-in-0 duration-300 ease-out"
+        )}
+      >
       {/* Summary cards */}
       <div className="grid gap-4 sm:gap-5 sm:grid-cols-2 lg:grid-cols-4">
         <Card
@@ -106,7 +157,7 @@ export function DashboardContent() {
         >
           <CardContent className="px-4 py-4 sm:px-6">
             <p className="text-sm font-medium text-muted-foreground">
-              Total Courses
+              Total Chapters
             </p>
             <p className="mt-2 text-xl font-bold tracking-tight text-foreground sm:text-2xl">
               {data?.totalChapters || 0}
@@ -142,15 +193,83 @@ export function DashboardContent() {
         </Card>
       </div>
 
-      {/* Charts */}
-      <div>
+      {/* Activity & subscription summary cards */}
+      <div className="grid gap-4 sm:gap-5 sm:grid-cols-2 lg:grid-cols-4">
         <Card className="rounded-xl border-border bg-card shadow-sm">
+          <CardContent className="px-4 py-4 sm:px-6">
+            <p className="text-sm font-medium text-muted-foreground">
+              Logged in today
+            </p>
+            <p className="mt-2 text-xl font-bold tracking-tight text-foreground sm:text-2xl">
+              {data?.loggedInUsersToday || 0}
+            </p>
+            <p className="mt-3 text-sm text-muted-foreground">
+              Users active since midnight UTC
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="rounded-xl border-border bg-card shadow-sm">
+          <CardContent className="px-4 py-4 sm:px-6">
+            <p className="text-sm font-medium text-muted-foreground">
+              Active subscriptions
+            </p>
+            <p className="mt-2 text-xl font-bold tracking-tight text-foreground sm:text-2xl">
+              {data?.activeSubscriptions || 0}
+            </p>
+            <Link
+              href={'/plans'}
+              className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
+            >
+              View plans
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </CardContent>
+        </Card>
+        <Card className="rounded-xl border-border bg-card shadow-sm">
+          <CardContent className="px-4 py-4 sm:px-6">
+            <p className="text-sm font-medium text-muted-foreground">
+              Flexible courses
+            </p>
+            <p className="mt-2 text-xl font-bold tracking-tight text-foreground sm:text-2xl">
+              {data?.flexibleCoursesCount || 0}
+            </p>
+            <Link
+              href={'/courses'}
+              className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
+            >
+              View courses
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </CardContent>
+        </Card>
+        <Card className="rounded-xl border-border bg-card shadow-sm">
+          <CardContent className="px-4 py-4 sm:px-6">
+            <p className="text-sm font-medium text-muted-foreground">
+              Standard courses
+            </p>
+            <p className="mt-2 text-xl font-bold tracking-tight text-foreground sm:text-2xl">
+              {data?.standardCoursesCount || 0}
+            </p>
+            <Link
+              href={'/courses'}
+              className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
+            >
+              View courses
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Charts */}
+      <div className="grid gap-4 sm:gap-5 lg:grid-cols-2">
+        <Card className="rounded-xl border-border bg-card shadow-sm lg:col-span-2">
           <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between space-y-0 px-4 pb-4 sm:px-6">
             <CardTitle className="text-base font-semibold">
-              User signups by month
+              User signups
             </CardTitle>
             <span className="rounded-full bg-primary/20 px-3 py-1 text-xs font-medium text-primary dark:text-primary shrink-0">
-              Last 12 months
+              {RANGE_BADGE_LABELS[range]}
             </span>
           </CardHeader>
           <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
@@ -160,7 +279,7 @@ export function DashboardContent() {
                 className="h-full w-full aspect-auto"
               >
                 <AreaChart
-                  data={mapUserSignupsToChartData(data?.userSignupsByMonth ?? [])}
+                  data={mapUserSignupsToChartData(data?.signupsSeries ?? [], granularity)}
                   margin={{ top: 8, right: 8, left: 0, bottom: 0 }}
                 >
                   <defs>
@@ -189,7 +308,7 @@ export function DashboardContent() {
                     className="stroke-border"
                   />
                   <XAxis
-                    dataKey="month"
+                    dataKey="bucket"
                     tickLine={false}
                     axisLine={false}
                     tickMargin={8}
@@ -213,6 +332,121 @@ export function DashboardContent() {
                   />
                 </AreaChart>
               </ChartContainer>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="rounded-xl border-border bg-card shadow-sm">
+          <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between space-y-0 px-4 pb-4 sm:px-6">
+            <CardTitle className="text-base font-semibold">
+              Course creation usage
+            </CardTitle>
+            <span className="rounded-full bg-primary/20 px-3 py-1 text-xs font-medium text-primary dark:text-primary shrink-0">
+              {RANGE_BADGE_LABELS[range]}
+            </span>
+          </CardHeader>
+          <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
+            <div className="h-[220px] w-full min-h-[200px] sm:h-[260px]">
+              <ChartContainer
+                config={usageChartConfig}
+                className="h-full w-full aspect-auto"
+              >
+                <BarChart
+                  data={mapUsageToChartData(data?.courseCreationSeries ?? [], granularity)}
+                  margin={{ top: 8, right: 8, left: 0, bottom: 0 }}
+                >
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    vertical={false}
+                    className="stroke-border"
+                  />
+                  <XAxis
+                    dataKey="bucket"
+                    tickLine={false}
+                    axisLine={false}
+                    tickMargin={8}
+                    interval={Math.max(0, Math.floor((data?.courseCreationSeries?.length ?? 0) / 6) - 1)}
+                    className="text-xs text-muted-foreground"
+                  />
+                  <YAxis
+                    tickLine={false}
+                    axisLine={false}
+                    tickMargin={8}
+                    allowDecimals={false}
+                    className="text-xs text-muted-foreground"
+                  />
+                  <ChartTooltip
+                    content={<ChartTooltipContent indicator="dot" />}
+                  />
+                  <Bar
+                    dataKey="flexible"
+                    stackId="usage"
+                    fill="var(--color-flexible)"
+                    radius={[0, 0, 0, 0]}
+                  />
+                  <Bar
+                    dataKey="standard"
+                    stackId="usage"
+                    fill="var(--color-standard)"
+                    radius={[4, 4, 0, 0]}
+                  />
+                </BarChart>
+              </ChartContainer>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="rounded-xl border-border bg-card shadow-sm">
+          <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between space-y-0 px-4 pb-4 sm:px-6">
+            <CardTitle className="text-base font-semibold">
+              Active subscriptions by plan
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
+            <div className="h-[220px] w-full min-h-[200px] sm:h-[260px]">
+              {data?.subscriptionsByPlan?.length ? (
+                <ChartContainer
+                  config={planChartConfig}
+                  className="h-full w-full aspect-auto"
+                >
+                  <BarChart
+                    data={data.subscriptionsByPlan}
+                    margin={{ top: 8, right: 8, left: 0, bottom: 0 }}
+                  >
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      vertical={false}
+                      className="stroke-border"
+                    />
+                    <XAxis
+                      dataKey="planName"
+                      tickLine={false}
+                      axisLine={false}
+                      tickMargin={8}
+                      className="text-xs text-muted-foreground"
+                    />
+                    <YAxis
+                      tickLine={false}
+                      axisLine={false}
+                      tickMargin={8}
+                      allowDecimals={false}
+                      className="text-xs text-muted-foreground"
+                    />
+                    <ChartTooltip
+                      content={<ChartTooltipContent indicator="dot" />}
+                    />
+                    <Bar
+                      dataKey="count"
+                      fill="var(--color-count)"
+                      radius={[4, 4, 0, 0]}
+                    />
+                  </BarChart>
+                </ChartContainer>
+              ) : (
+                <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+                  No active subscriptions yet
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -286,6 +520,8 @@ export function DashboardContent() {
           </div>
         </CardContent>
       </Card>
+      </div>
+      )}
     </div>
   );
 }
